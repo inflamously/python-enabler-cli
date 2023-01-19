@@ -6,23 +6,27 @@ from tools.pecommand import PECommandDict, pecommand
 projects: Typer = Typer()
 
 @projects.command()
-@pecommand()
-def load():
-    return PECommandDict(
+@pecommand(
+    PECommandDict(
         {
-            "get git version": ["git", "version"]
+            "retrieve git version": ["x", "version"]
         }
     )
+)
+def load():
+    ...
     
     
 @projects.command()
-@pecommand()
-def create_file():
-    return PECommandDict(
+@pecommand(
+    PECommandDict(
         {
             "create file": ["touch test.txt"]
         }
     )
+)
+def create_file():
+    ...
     
         
 @projects.command()
