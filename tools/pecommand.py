@@ -1,7 +1,9 @@
 # Equals to pecommand(args)(func). Also a curry function chaining.
 from typing import Any, Callable, Tuple, Union
+from cmds.peshell import PE_ERROR_CODE, PE_SUCCESS
 from cmds.peshell import runner
 from errors.pesyntaxerror import PESyntaxError
+
 
 class PECommandDict():
     def __init__(self, commandlist: dict[str, list[str]]) -> None:
@@ -22,26 +24,31 @@ class PECommandDict():
 
     def execute(self):
         for key, command in self.commandlist.items():
-            runner(command, desc=key)
+            pecodemessage = runner(command, desc=key)
+            # TODO: Implement check if we are given an error. 
+            if pecodemessage == PE_ERROR_CODE:
+                ...
 
 
 """
 (@pecommand(<xyz>))(func)
 """
 # TODO: Check if this decorator should instead pass commands in a dict and not the target function?
-def pecommand():
-    def inner(func: Callable[..., PECommandDict]):
-        commandlist = func()
-        
+def pecommand(commandlist: PECommandDict):
+    def inner(original_func: Callable):
         # Evaluate function
         valid_syntax, data, index = commandlist.validate()
         
         # Raise error if parsing failed
         if not valid_syntax: raise PESyntaxError(index, data)
         
-        # Run commands
-        commandlist.execute()
+        # Return a modified func version where commandlist gets called at the end
+        def modified_func():
+            original_func()
+            commandlist.execute()
+        
+        modified_func.__name__ = original_func.__name__
         
         # Return if parsing passed
-        return func
+        return modified_func
     return inner
