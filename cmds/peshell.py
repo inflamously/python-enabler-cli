@@ -8,10 +8,10 @@ from cmds.pesimpleerror import PECodeMessage
 DEBUG = True
 
 """
-Starts running OS commands line by line from given commandlist.
+Starts running OS commands line by line from given command with params.
 Also reports errors correctly.
 """
-def runner(commandlist: List[str], desc: str = "#") -> PECodeMessage:
+def runner(command: List[str], desc: str = "#") -> PECodeMessage:
     try:
         if platform == "win32" or platform == "cygwin":
             process = Popen(command, stdout=PIPE, stderr=PIPE)
@@ -26,4 +26,4 @@ def runner(commandlist: List[str], desc: str = "#") -> PECodeMessage:
         else:
             return PE_ERROR_PLATFORM
     except FileNotFoundError as FileNotFoundErrorData:
-        return PE_ERROR_FILENOTFOUND(FileNotFoundErrorData.errno)
+        return PE_ERROR_FILENOTFOUND.assign_data(FileNotFoundErrorData.errno)

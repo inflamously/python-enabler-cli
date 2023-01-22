@@ -9,7 +9,7 @@ projects: Typer = Typer()
 @pecommand(
     PECommandDict(
         {
-            "retrieve git version": ["x", "version"]
+            "retrieve git version": ["xyz", "version"]
         }
     )
 )

@@ -1,7 +1,7 @@
 # Equals to pecommand(args)(func). Also a curry function chaining.
 from typing import Any, Callable, Tuple, Union
 from errors.pesyntaxerror import PESyntaxError
-from cmds.pesimpleerror import PE_ERROR_GENERIC
+from cmds.pesimpleerror import PE_SUCCESS
 from cmds.peshell import runner
 
 
@@ -30,9 +30,8 @@ class PECommandDict():
     def execute(self):
         for key, command in self.commandlist.items():
             pecodemessage = runner(command, desc=key)
-            # TODO: Implement check if we are given an error. 
-            if pecodemessage == PE_ERROR_GENERIC:
-                print(pecodemessage.message)
+            if not pecodemessage == PE_SUCCESS:
+                print("{}: [{}]".format(pecodemessage.message, pecodemessage.data))
 
 
 """

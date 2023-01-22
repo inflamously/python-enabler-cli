@@ -1,3 +1,6 @@
+from typing import Any, Union
+
+
 PE_NONE = (1 << 0)
 
 
@@ -5,6 +8,7 @@ class PECodeMessage():
     
     
     value: int
+    data: Any
     message: str
     
 
@@ -13,8 +17,14 @@ class PECodeMessage():
         self.message = message
 
 
-    def __call__(self, custom_code: int):
+    def __call__(self, custom_code: int, message: Union[str, None] = None):
         self.value = custom_code
+        if message: self.message = message
+        return self
+    
+    
+    def assign_data(self, data: Any):
+        self.data = data
         return self
     
 
@@ -23,7 +33,6 @@ class PECodeMessage():
     
 
     def __eq__(self, __x: object) -> bool:
-        print(self, __x)
         if isinstance(__x, PECodeMessage):
             return (self.value & __x.value) == __x.value
         elif isinstance(__x, int):
@@ -34,8 +43,8 @@ class PECodeMessage():
 
 PE_SUCCESS = PECodeMessage((PE_NONE << 1), "Success") # Always ...xxx01
 PE_ERROR_GENERIC = PECodeMessage((PE_NONE << 2), "Error occured") # Always ...xxx10
-PE_ERROR_PLATFORM = PECodeMessage((PE_NONE << 3), "Platform not found")
-PE_ERROR_FILENOTFOUND = PECodeMessage(message="File not found")
+PE_ERROR_PLATFORM = PECodeMessage((PE_NONE << 3), "Platform not supported")
+PE_ERROR_FILENOTFOUND = PECodeMessage((PE_NONE << 4), message="OS File not found")
 
 
 if not (PE_NONE == (1 << 0)): raise Exception("PE_NONE is empty and must be 0001")
