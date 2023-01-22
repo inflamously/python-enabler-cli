@@ -1,6 +1,7 @@
 # Equals to pecommand(args)(func). Also a curry function chaining.
 from typing import Any, Callable, Tuple, Union
-from cli.cmds.pesimpleerror import PE_ERROR_GENERIC
+from errors.pesyntaxerror import PESyntaxError
+from cmds.pesimpleerror import PE_ERROR_GENERIC
 from cmds.peshell import runner
 
 
