@@ -30,8 +30,8 @@ class PECommandDict():
         for key, command in self.commandlist.items():
             pecodemessage = runner(command, desc=key)
             # TODO: Implement check if we are given an error. 
-            if pecodemessage.has_error():
-                ...
+            if pecodemessage == PE_ERROR_GENERIC:
+                print(pecodemessage.message)
 
 
 """
