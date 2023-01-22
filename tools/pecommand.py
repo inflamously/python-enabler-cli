@@ -1,10 +1,12 @@
 # Equals to pecommand(args)(func). Also a curry function chaining.
 from typing import Any, Callable, Tuple, Union
-from cmds.peshell import PE_ERROR_CODE, PE_SUCCESS
+from cli.cmds.pesimpleerror import PE_ERROR_GENERIC
 from cmds.peshell import runner
-from errors.pesyntaxerror import PESyntaxError
 
 
+"""
+Abstracts list of commands away to be executed by the runner line by line
+"""
 class PECommandDict():
     def __init__(self, commandlist: dict[str, list[str]]) -> None:
         self.commandlist = commandlist
@@ -21,12 +23,14 @@ class PECommandDict():
             position = (position[0] + 1, position[1])
         return (True, None, position)
 
-
+    """
+    Executes commands in commandlist and handles the error on the output of given command
+    """
     def execute(self):
         for key, command in self.commandlist.items():
             pecodemessage = runner(command, desc=key)
             # TODO: Implement check if we are given an error. 
-            if pecodemessage == PE_ERROR_CODE:
+            if pecodemessage.has_error():
                 ...
 
 

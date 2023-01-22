@@ -1,18 +1,11 @@
 from subprocess import PIPE, Popen
 from sys import platform
 from typing import List, Union
+from cmds.pesimpleerror import PE_ERROR_FILENOTFOUND, PE_ERROR_PLATFORM, PE_SUCCESS
 from cmds.pesimpleerror import PECodeMessage
 
+
 DEBUG = True
-PE_ERROR_CODE = 0xCE0000
-
-
-PE_SUCCESS = PECodeMessage(PE_ERROR_CODE + 1, "Success")
-
-
-PE_ERROR_GENERIC = PECodeMessage(PE_ERROR_CODE + 2, "Error occured")
-PE_ERROR_PLATFORM = PECodeMessage(PE_ERROR_CODE + 3, "Platform not found")
-PE_ERROR_FILENOTFOUND = PECodeMessage(message="File not found")
 
 
 def runner(command: List[str], desc: str = "#") -> PECodeMessage:
