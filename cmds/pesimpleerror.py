@@ -17,10 +17,6 @@ class PECodeMessage():
         self.value = custom_code
         return self
     
-        
-    def has_error(self) -> bool:
-        return ((self.value & int(PE_ERROR_GENERIC.value)) == PE_ERROR_GENERIC)
-
 
     def __repr__(self) -> str:
         return str(self.value)
@@ -29,9 +25,9 @@ class PECodeMessage():
     def __eq__(self, __x: object) -> bool:
         print(self, __x)
         if isinstance(__x, PECodeMessage):
-            return self.value == __x.value
+            return (self.value & __x.value) == __x.value
         elif isinstance(__x, int):
-            return self.value == __x
+            return (self.value & __x) == __x
         else:
             return False
 
