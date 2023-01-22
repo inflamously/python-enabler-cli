@@ -7,8 +7,11 @@ from cmds.pesimpleerror import PECodeMessage
 
 DEBUG = True
 
-
-def runner(command: List[str], desc: str = "#") -> PECodeMessage:
+"""
+Starts running OS commands line by line from given commandlist.
+Also reports errors correctly.
+"""
+def runner(commandlist: List[str], desc: str = "#") -> PECodeMessage:
     try:
         if platform == "win32" or platform == "cygwin":
             process = Popen(command, stdout=PIPE, stderr=PIPE)
