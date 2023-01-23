@@ -1,37 +1,69 @@
 # Equals to pecommand(args)(func). Also a curry function chaining.
+import types
 from typing import Any, Callable, Tuple, Union
+from tools.peprinter import pe_print_error
+from cmds.pesimpleerror import PECodeMessage
 from errors.pesyntaxerror import PESyntaxError
 from cmds.pesimpleerror import PE_SUCCESS
 from cmds.peshell import runner
 
 
+PEStringList = list[str]
+PEList = Union[PEStringList, Tuple[Callable[[], Any], list[str], Callable[[], Any]]]
+PECallable = Callable[..., PEList]
+OptionalCallable = Union[Callable[[], Any], None]
+
+
+class PECommand():
+    def __init__(self, 
+                commandlist: PEStringList, 
+                before_callback: OptionalCallable = None, 
+                after_callback: OptionalCallable = None,
+                desc: str = "") -> None:
+        self.commandlist = commandlist
+        self.before_callback = before_callback
+        self.after_callback = after_callback
+        self.desc = desc
+
+
+    def validate(self) -> Tuple[bool, Any, int]:
+        position: int = 1
+        for value_index in range(len(self.commandlist)):
+            if not isinstance(self.commandlist[value_index], str): return (False, self.commandlist[value_index], position)
+            position += 1
+        return (True, None, -1)
+    
+
 """
 Abstracts list of commands away to be executed by the runner line by line
 """
 class PECommandDict():
-    def __init__(self, commandlist: dict[str, list[str]]) -> None:
-        self.commandlist = commandlist
+    
+    
+    def __init__(self, *args: PECommand) -> None:
+        self.commands = args
         
+
     def validate(self) -> Tuple[bool, Union[Any, None], Tuple[int, int]]:
         position = (1, 1);
-        for key, value in self.commandlist.items():
-            if not isinstance(key, str): return (False, key, position)
-            if not isinstance(value, list): return (False, value, position)
-            if len(value) <= 0: return (False, value, position)
-            for value_index in range(len(value)):
-                if not isinstance(value[value_index], str): return (False, value[value_index], position)
-                position = (position[0], position[1] + 1)
-            position = (position[0] + 1, position[1])
+        for pecommand in self.commands:
+            if not isinstance(pecommand, PECommand): return (False, pecommand, position)
+            value_valid, errored_value, position_index = pecommand.validate()
+            position = (position[0] + 1, position_index)
+            if not pecommand.validate: return (value_valid, errored_value, position)
         return (True, None, position)
+
 
     """
     Executes commands in commandlist and handles the error on the output of given command
     """
     def execute(self):
-        for key, command in self.commandlist.items():
-            pecodemessage = runner(command, desc=key)
-            if not pecodemessage == PE_SUCCESS:
-                print("{}: [{}]".format(pecodemessage.message, pecodemessage.data))
+        for pecommand in self.commands:
+            if pecommand.before_callback: pecommand.before_callback()
+            pecodemessage = runner(pecommand.commandlist, desc=pecommand.desc)
+            if isinstance(pecodemessage, PECodeMessage) and not pecodemessage == PE_SUCCESS:
+                pe_print_error(pecommand.desc, pecodemessage.message, pecodemessage.data if hasattr(pecodemessage, 'data') else None)
+            if pecommand.after_callback: pecommand.after_callback()
 
 
 """

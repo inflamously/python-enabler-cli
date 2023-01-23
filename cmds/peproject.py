@@ -1,34 +1,8 @@
 
-from typer import Typer
-from cmds.peshell import runner
-from tools.pecommand import PECommandDict, pecommand
+from typer import Typer 
+from cmds.perepository import repository
+
 
 projects: Typer = Typer()
+projects.add_typer(repository, name="repository")
 
-@projects.command()
-@pecommand(
-    PECommandDict(
-        {
-            "retrieve git version": ["xyz", "version"]
-        }
-    )
-)
-def load():
-    ...
-    
-    
-@projects.command()
-@pecommand(
-    PECommandDict(
-        {
-            "create file": ["touch test.txt"]
-        }
-    )
-)
-def create_file():
-    ...
-    
-        
-@projects.command()
-def test():
-    runner(['cmd', '/c', 'echo', 'Hello World!'])

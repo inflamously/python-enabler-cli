@@ -17,9 +17,9 @@ class PECodeMessage():
         self.message = message
 
 
-    def __call__(self, custom_code: int, message: Union[str, None] = None):
-        self.value = custom_code
-        if message: self.message = message
+    def __call__(self, custom_code: Union[int, None] = None, message: Union[str, None] = None):
+        self.value = custom_code if custom_code else self.value
+        self.message = message if message else self.message
         return self
     
     
@@ -45,6 +45,7 @@ PE_SUCCESS = PECodeMessage((PE_NONE << 1), "Success") # Always ...xxx01
 PE_ERROR_GENERIC = PECodeMessage((PE_NONE << 2), "Error occured") # Always ...xxx10
 PE_ERROR_PLATFORM = PECodeMessage((PE_NONE << 3), "Platform not supported")
 PE_ERROR_FILENOTFOUND = PECodeMessage((PE_NONE << 4), message="OS File not found")
+PE_ERROR_COMMAND = PECodeMessage((PE_NONE << 5))
 
 
 if not (PE_NONE == (1 << 0)): raise Exception("PE_NONE is empty and must be 0001")
