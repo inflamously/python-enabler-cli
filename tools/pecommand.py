@@ -6,6 +6,7 @@ from cmds.pesimpleerror import PECodeMessage
 from errors.pesyntaxerror import PESyntaxError
 from cmds.pesimpleerror import PE_SUCCESS
 from cmds.peshell import runner
+from os import environ
 
 
 PEStringList = list[str]
@@ -16,14 +17,18 @@ OptionalCallable = Union[Callable[[], Any], None]
 
 class PECommand():
     def __init__(self, 
-                commandlist: PEStringList, 
+                commandlist: PEStringList,
                 before_callback: OptionalCallable = None, 
                 after_callback: OptionalCallable = None,
-                desc: str = "") -> None:
+                desc: str = "",
+                custom_env: dict[str, str] = {},
+                shell=False) -> None:
         self.commandlist = commandlist
         self.before_callback = before_callback
         self.after_callback = after_callback
         self.desc = desc
+        self.update_env(custom_env)
+        self.shell=shell
 
 
     def validate(self) -> Tuple[bool, Any, int]:
@@ -33,6 +38,15 @@ class PECommand():
             position += 1
         return (True, None, -1)
     
+    
+    def update_env(self, custom_env: Union[dict[str, str], None]=None):
+        self.env = environ.copy()
+        if custom_env:
+            for key, value in custom_env.items():
+                self.env.pop(key, None)
+                self.env[key] = value
+        print(self.env)
+
 
 """
 Abstracts list of commands away to be executed by the runner line by line
@@ -60,7 +74,7 @@ class PECommandDict():
     def execute(self):
         for pecommand in self.commands:
             if pecommand.before_callback: pecommand.before_callback()
-            pecodemessage = runner(pecommand.commandlist, desc=pecommand.desc)
+            pecodemessage = runner(pecommand.commandlist, desc=pecommand.desc, env=pecommand.env, shell=pecommand.shell)
             if isinstance(pecodemessage, PECodeMessage) and not pecodemessage == PE_SUCCESS:
                 pe_print_error(pecommand.desc, pecodemessage.message, pecodemessage.data if hasattr(pecodemessage, 'data') else None)
             if pecommand.after_callback: pecommand.after_callback()

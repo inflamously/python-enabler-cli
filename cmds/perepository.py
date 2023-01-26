@@ -12,7 +12,7 @@ repository = Typer()
 @repository.command()
 def download(project_path: str, url: str, force_create: bool = False):
     os.chdir(project_path)
-    if force_create: shutil.rmtree(".git")
+    if force_create and os.path.exists(".git"): shutil.rmtree(".git")
     if not os.path.exists(".git"):
         PECommandDict(
             PECommand(["git", "init"], desc="initialize repository"),

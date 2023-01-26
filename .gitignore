@@ -3,3 +3,4 @@ venv/
 **/*.pyc
 license.py
 license.md
+commands.txt
