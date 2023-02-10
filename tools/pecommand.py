@@ -1,23 +1,21 @@
 # Equals to pecommand(args)(func). Also a curry function chaining.
 import types
 from typing import Any, Callable, Tuple, Union
-from tools.peprinter import pe_print_error
-from cmds.pesimpleerror import PECodeMessage
-from errors.pesyntaxerror import PESyntaxError
-from cmds.pesimpleerror import PE_SUCCESS
-from cmds.peshell import runner
+from cli.cmds.pesimpleerror import PECodeMessage
+from cli.errors.pesyntaxerror import PESyntaxError
+from cli.cmds.pesimpleerror import PE_SUCCESS
+from cli.cmds.peshell import runner
 from os import environ
 
 
-PEStringList = list[str]
-PEList = Union[PEStringList, Tuple[Callable[[], Any], list[str], Callable[[], Any]]]
+PEList = Union[list[str], Tuple[Callable[[], Any], list[str], Callable[[], Any]]]
 PECallable = Callable[..., PEList]
 OptionalCallable = Union[Callable[[], Any], None]
 
 
 class PECommand():
     def __init__(self, 
-                commandlist: PEStringList,
+                commandlist: list[str],
                 before_callback: OptionalCallable = None, 
                 after_callback: OptionalCallable = None,
                 desc: str = "",
@@ -45,7 +43,6 @@ class PECommand():
             for key, value in custom_env.items():
                 self.env.pop(key, None)
                 self.env[key] = value
-        print(self.env)
 
 
 """
@@ -76,7 +73,7 @@ class PECommandDict():
             if pecommand.before_callback: pecommand.before_callback()
             pecodemessage = runner(pecommand.commandlist, desc=pecommand.desc, env=pecommand.env, shell=pecommand.shell)
             if isinstance(pecodemessage, PECodeMessage) and not pecodemessage == PE_SUCCESS:
-                pe_print_error(pecommand.desc, pecodemessage.message, pecodemessage.data if hasattr(pecodemessage, 'data') else None)
+                pecodemessage.exception(pecommand.desc, " ".join(pecommand.commandlist))
             if pecommand.after_callback: pecommand.after_callback()
 
 

@@ -1,15 +1,23 @@
-import typer
-from cmds.peproject import projects
+from os import path
+import sys
+# TODO: Temporarily added ... until packaging properly learned...
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+print(path.dirname(path.abspath(__file__)))
+print(sys.path)
+
+from typer import Typer
+from cli.cmds.peproject import project
 
 
-app = typer.Typer()
-app.add_typer(projects, name="projects")
+app: Typer = Typer()
+app.add_typer(project, name="project")
 
 
 @app.command()
-def version():
-    print("0.0+0000")
+def version() -> None:
+    print("0.1")
 
 
 if __name__ == "__main__":
+
     app()

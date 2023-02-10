@@ -1,6 +1,5 @@
 from typing import Any, Union
 
-
 PE_NONE = (1 << 0)
 
 
@@ -17,9 +16,10 @@ class PECodeMessage():
         self.message = message
 
 
-    def __call__(self, custom_code: Union[int, None] = None, message: Union[str, None] = None):
+    def __call__(self, custom_code: Union[int, None] = None, message: Union[str, None] = None, data: Any = None):
         self.value = custom_code if custom_code else self.value
         self.message = message if message else self.message
+        self.data = data if data else self.data if hasattr(self, "data") else None
         return self
     
     
@@ -39,6 +39,10 @@ class PECodeMessage():
             return (self.value & __x) == __x
         else:
             return False
+        
+        
+    def exception(self, desc: str = "", command: str = ""):
+        raise Exception('("{}", "{}", "{}", "{}", "{}")'.format(self.value, self.message, desc, self.data if hasattr(self, 'data') else None, command))
 
 
 PE_SUCCESS = PECodeMessage((PE_NONE << 1), "Success") # Always ...xxx01

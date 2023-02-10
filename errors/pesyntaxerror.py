@@ -1,4 +1,4 @@
-from errors.peexception import PEException
+from cli.errors.peexception import PEException
 
 class PESyntaxError(PEException):
     def __init__(self, position, data, detail="Invalid syntax") -> None:

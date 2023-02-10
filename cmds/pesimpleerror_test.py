@@ -1,4 +1,4 @@
-from cmds.pesimpleerror import PE_NONE, PE_SUCCESS, PECodeMessage
+from cli.cmds.pesimpleerror import PE_NONE, PE_SUCCESS, PECodeMessage
 
 
 def test_multiple_error_counter():
