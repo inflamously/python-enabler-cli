@@ -1,14 +1,8 @@
-from subprocess import PIPE, Popen, run
+from subprocess import PIPE, CompletedProcess, Popen, run
 from sys import platform
-from typing import List
+from typing import List, Union
+from cli.errors.pesimpleerror import PE_ERROR_COMMAND, PE_ERROR_FILENOTFOUND, PE_ERROR_PLATFORM, PE_SUCCESS, PECodeMessage
 from cli.tools.peprinter import pe_print_command
-from cli.cmds.pesimpleerror import (
-    PE_ERROR_FILENOTFOUND,
-    PE_ERROR_PLATFORM,
-    PE_SUCCESS,
-    PE_ERROR_COMMAND,
-)
-from cli.cmds.pesimpleerror import PECodeMessage
 
 
 DEBUG = True
@@ -25,15 +19,15 @@ Also reports errors correctly.
 
 
 def runner(
-    command: List[str], desc: str = "#", sanitize=True, env=None, shell=False
+    command: str, desc: str = "#", sanitize=True, env=None, shell=False
 ) -> PECodeMessage:
     try:
         if platform == "win32" or platform == "cygwin":
-            process = None
+            process: Union[Popen[str], None] = None
             if shell:
                 # TODO: Implement custom shell selection.
                 output = run(
-                    ["cmd", "-c", " ".join(command)],
+                    ["cmd", "-c", command],
                     stdout=PIPE,
                     stderr=PIPE,
                     stdin=PIPE,

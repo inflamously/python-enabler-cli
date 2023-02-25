@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Union
 
 
 def pe_print_command(desc: str, output: Union[str, None] = None):
