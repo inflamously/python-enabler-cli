@@ -1,7 +1,7 @@
 import os
 from tempfile import TemporaryDirectory
 
-from cli.cmds.peproject import install
+from python_enabler.cmds.peproject import install
 
 
 def test_permission_tempdir():
@@ -11,10 +11,10 @@ def test_permission_tempdir():
 
 
 def test_project_install(mocker):
-    mocker.patch("cli.cmds.pecommanddict.PECommandDict.execute")
+    mocker.patch("python_enabler.cmds.pecommanddict.PECommandDict.execute")
     with TemporaryDirectory() as tempdirectory:
         install(
-            "git@github.com:inflamously/python-enabler-cli.git",
+            "git@github.com:inflamously/python-enabler-.git",
             tempdirectory,
             "test_token_whatever",
         )

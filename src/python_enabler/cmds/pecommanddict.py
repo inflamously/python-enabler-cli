@@ -5,9 +5,9 @@ Abstracts list of commands away to be executed by the runner line by line
 
 from typing import Any, Tuple, Union
 from typing_extensions import Self
-from cli.cmds.pecommand import OptionalCallable, PECommand
-from cli.cmds.peshell import runner
-from cli.errors.pesimpleerror import PE_SUCCESS, PECodeMessage
+from .pecommand import OptionalCallable, PECommand
+from .peshell import runner
+from ..errors.pesimpleerror import PE_SUCCESS, PECodeMessage
 
 
 class PECommandDict:

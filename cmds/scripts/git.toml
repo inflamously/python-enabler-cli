@@ -1,3 +1,0 @@
-[git.clone.project]
-command = "git"
-args = ["clone", personal_access_token, repository_url]

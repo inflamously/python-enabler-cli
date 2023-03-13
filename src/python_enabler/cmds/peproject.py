@@ -2,8 +2,8 @@ import os
 from re import Match
 from typing import Union
 from typer import Typer
-from cli.cmds.pecommanddict import PECommandDict
-from cli.tools.url_matcher import git_url_matcher
+from .pecommanddict import PECommandDict
+from ..tools.url_matcher import git_url_matcher
 
 
 project: Typer = Typer()

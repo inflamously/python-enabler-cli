@@ -1,8 +1,8 @@
 from subprocess import PIPE, CompletedProcess, Popen, run
 from sys import platform
 from typing import List, Union
-from cli.errors.pesimpleerror import PE_ERROR_COMMAND, PE_ERROR_FILENOTFOUND, PE_ERROR_PLATFORM, PE_SUCCESS, PECodeMessage
-from cli.tools.peprinter import pe_print_command
+from ..errors.pesimpleerror import PE_ERROR_COMMAND, PE_ERROR_FILENOTFOUND, PE_ERROR_PLATFORM, PE_SUCCESS, PECodeMessage
+from ..tools.peprinter import pe_print_command
 
 
 DEBUG = True

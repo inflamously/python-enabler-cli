@@ -3,7 +3,7 @@ This ensures that the passed function name does not break due to changes to the 
 """
 
 
-from cli.cmds.pecommanddict import PECommandDict
+from python_enabler.cmds.pecommanddict import PECommandDict
 
 
 def test_pecommanddict_command_creation() -> None:

@@ -1,6 +1,6 @@
 from re import Match
 from typing import Union
-from cli.tools.url_matcher import git_url_matcher
+from python_enabler.tools.url_matcher import git_url_matcher
 
 
 def test_git_url_matcher():
