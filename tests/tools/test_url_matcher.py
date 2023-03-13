@@ -1,16 +1,9 @@
-from re import Match
-from typing import Union
-from python_enabler.tools.url_matcher import git_url_matcher
+import pytest
+from python_enabler.tools.url_matcher import is_valid_git_url
 
 
 def test_git_url_matcher():
-    assert git_url_matcher("git@github.com:inflamously/stable-cheese.git") is not None
-    assert git_url_matcher("") is None
-    match: Union[Match[str], None] =  git_url_matcher("git@")
-    assert match is not None
-    assert match.group(1) == 'git'
-    assert match.group(2) == '@'
-    match = git_url_matcher("git@github.com:inflamously/stable-cheese.git")
-    assert match is not None
-    assert match.group(1) == 'git'
-    assert match.group(2) == '@github.com:inflamously/stable-cheese.git'
+    assert is_valid_git_url("https://github.com/inflamously/stable-cheese") == True 
+    assert is_valid_git_url("git@github.com:inflamously/stable-cheese.git") == True
+    with pytest.raises(Exception):
+        assert is_valid_git_url("")
